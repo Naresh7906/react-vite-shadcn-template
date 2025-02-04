@@ -1,15 +1,11 @@
 # Development stage
-FROM node:18-alpine
+FROM node:18-alpine3.18
 
 # Set working directory
 WORKDIR /app
 
-# Set build arguments for environment variables
-ARG VITE_API_URL
 ARG PORT
 
-# Set environment variables
-ENV VITE_API_URL=$VITE_API_URL
 ENV PORT=$PORT
 
 # Copy package files
