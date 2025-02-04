@@ -1,34 +1,34 @@
-# Build stage
-FROM node:20-alpine
+# Development stage
+FROM node:18-alpine
 
-ARG PORT=8080
-ARG VITE_STAGE
-
-ENV PORT=${PORT}
-ENV VITE_STAGE=${VITE_STAGE}}
-
+# Set working directory
 WORKDIR /app
+
+# Set build arguments for environment variables
+ARG VITE_API_URL
+ARG PORT
+
+# Set environment variables
+ENV VITE_API_URL=$VITE_API_URL
+ENV PORT=$PORT
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# Install all dependencies (including devDependencies)
 RUN npm install
 
-# Copy source files
+# Copy the rest of the application
 COPY . .
+
+# Expose the port
+EXPOSE $PORT
 
 # Build the application
 RUN npm run build
 
-WORKDIR /app
-
-# Install serve package globally
+# Serve the application (you'll need to install a static file server)
 RUN npm install -g serve
 
-# Expose port 8080 (Azure Web Apps expects this)
-EXPOSE ${PORT}
-
-# Start the server
-# Using PORT environment variable which Azure Web Apps will provide
-CMD ["npx" ,"serve" ,"-s" ,"dist", "-l" ,"${PORT}"]
+# Start the server (using shell form to evaluate environment variable)
+CMD [ "serve", "-s", "dist" ]
