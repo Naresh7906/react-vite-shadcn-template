@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine as build
+FROM node:20-alpine
 
 ARG PORT=8080
 ARG VITE_STAGE
@@ -29,12 +29,9 @@ WORKDIR /app
 # Install serve package globally
 RUN npm install -g serve
 
-# Copy built files from build stage
-COPY --from=build /app/dist ./dist
-
 # Expose port 8080 (Azure Web Apps expects this)
 EXPOSE ${PORT}
 
 # Start the server
 # Using PORT environment variable which Azure Web Apps will provide
-CMD serve -s dist -l ${PORT}
+CMD ["npx" ,"serve" ,"-s" ,"dist", "-l" ,"${PORT}"]
